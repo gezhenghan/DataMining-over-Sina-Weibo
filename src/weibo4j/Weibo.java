@@ -57,8 +57,8 @@ import weibo4j.util.URLEncodeUtils;
  */
 
 public class Weibo extends WeiboSupport implements java.io.Serializable {
-	public static String CONSUMER_KEY = "876742772";
-	public static String CONSUMER_SECRET = "9d9a1b823f6cc7896f939fa50f8ffa16";
+	public static String CONSUMER_KEY = "";//"876742772";"3773352772";  "0a710d84b9de409616dfcc7c400456d8";
+	public static String CONSUMER_SECRET = "";//"9d9a1b823f6cc7896f939fa50f8ffa16";
 	private String baseURL = Configuration.getScheme() + "api.t.sina.com.cn/";
 	private String searchBaseURL = Configuration.getScheme() + "api.t.sina.com.cn/";
 	private static final long serialVersionUID = -1486360080128882436L;
@@ -677,11 +677,10 @@ public class Weibo extends WeiboSupport implements java.io.Serializable {
 	 * @throws WeiboException when Weibo service or network is unavailable
 	 * @since Weibo4J 1.2.1
 	 * @see <a href="http://open.t.sina.com.cn/wiki/index.php/Statuses/friends">statuses/friends </a>
-	 */
+	 */ 
 	public List<User> getFriendsStatuses(String id, int cursor) throws WeiboException {
-		return User.constructUsers(get(getBaseURL() + "statuses/friends.json",
-				new PostParameter[]{new PostParameter("id", id),new PostParameter("cursor", cursor)},
-				true));
+		  return User.constructUser(get(getBaseURL() + "statuses/friends.json",
+				  new PostParameter[]{new PostParameter("id", id),new PostParameter("cursor", cursor)}, true));
 	}
 	/**
 	 * 获取当前用户关注列表及每个关注用户的最新一条微博，返回结果按关注时间倒序排列，最新关注的用户排在最前面。
@@ -691,11 +690,42 @@ public class Weibo extends WeiboSupport implements java.io.Serializable {
 	 * @since Weibo4J 1.2.1
 	 * @see <a href="http://open.t.sina.com.cn/wiki/index.php/Statuses/friends">statuses/friends </a>
 	 */
-	public List<User> getFriendsStatuses(String id ,int cursor,int count) throws WeiboException {
+	public List<User> getFriendsStatuses(String id,int cursor,int count) throws WeiboException {
 		/*return User.constructUsers(get(getBaseURL() + "statuses/friends.xml", null,
                 paging, true), this);*/
-		return User.constructUsers(get(getBaseURL() + "statuses/friends.json",
+		return User.constructUser(get(getBaseURL() + "statuses/friends.json",
 				new PostParameter[]{new PostParameter("id",id),new PostParameter("cursor",cursor),new PostParameter("count",count)} , true));
+	}
+	
+	/**
+	 * 返回获取当前用户关注列表的Response
+	 * @author swarm
+	 * @throws WeiboException 
+	 */
+	public Response getFriendsStatusesResponse(String id,int cursor,int count) throws WeiboException
+	{
+		return get(getBaseURL() + "statuses/friends.json",
+				new PostParameter[]{new PostParameter("id",id),new PostParameter("cursor",cursor),new PostParameter("count",count)} , true);
+	}
+	
+	/**
+	 * 王恒写的用来 获取当前用户关注列表及每个关注用户的最新一条微博，返回结果按关注时间倒序排列，最新关注的用户排在最前面。
+	 * @author swarm
+	 * 
+	 */
+	public List<User> getFriendsStatuses(Response res) throws WeiboException {
+		/*return User.constructUsers(get(getBaseURL() + "statuses/friends.xml", null,
+                paging, true), this);*/
+		return User.constructUser(res);
+	}
+	
+	/**
+	 * 王恒写的用来 得到TMD next_cursor的东东!!!草泥马
+	 * @author swarm
+	 * 
+	 */
+	public int getTmdNextCursor(Response res) throws WeiboException { 
+		return User.getNextCursor(res);
 	}
 
 
@@ -737,9 +767,10 @@ public class Weibo extends WeiboSupport implements java.io.Serializable {
 	 * @see <a href="http://open.t.sina.com.cn/wiki/index.php/Statuses/followers">statuses/followers </a>
 	 */
 	public List<User> getFollowersStatuses(String id, int cursor) throws WeiboException {
-		return User.constructUser(get(getBaseURL() + "statuses/followers.json", 
-				new PostParameter[]{new PostParameter("id", id),new PostParameter("cursor", cursor)}, true));
-	}
+        return User.constructUser(get(getBaseURL() + "statuses/followers.json", 
+                new PostParameter[]{new PostParameter("id", id),new PostParameter("cursor", cursor)}, true));
+    }
+	
 
 	/**
 	 * 获取当前用户粉丝列表及及每个粉丝用户最新一条微博，返回结果按关注时间倒序排列，最新关注的用户排在最前面。
@@ -750,9 +781,22 @@ public class Weibo extends WeiboSupport implements java.io.Serializable {
 	 * @see <a href="http://open.t.sina.com.cn/wiki/index.php/Statuses/followers">statuses/followers </a>
 	 */
 	public List<User> getFollowersStatuses(String id,int cursor,int count) throws WeiboException {
-		return User.constructUsers(get(getBaseURL() + "statuses/followers.json", 
-				new PostParameter[]{new PostParameter("id", id),new PostParameter("cursor", cursor),new PostParameter("count",count)}, true));
+        return User.constructUser(get(getBaseURL() + "statuses/followers.json", 
+                new PostParameter[]{new PostParameter("id", id),new PostParameter("cursor", cursor),new PostParameter("count",count)}, true));
+    }
+	
+	/**
+	 * 返回获取当前用户fans列表的Response
+	 * @author swarm
+	 * @throws WeiboException 
+	 */
+	public Response getFollowersStatusesResponse(String id,int cursor,int count) throws WeiboException
+	{
+		return get(getBaseURL() + "statuses/followers.json",
+				new PostParameter[]{new PostParameter("id",id),new PostParameter("cursor",cursor),new PostParameter("count",count)} , true);
 	}
+	
+	
 	/**
 	 * 获取当前用户粉丝列表及及每个粉丝用户最新一条微博，返回结果按关注时间倒序排列，最新关注的用户排在最前面。
 	 * @param cursor 分页数据
@@ -2303,7 +2347,7 @@ public class Weibo extends WeiboSupport implements java.io.Serializable {
 		http.setToken(token, tokenSecret);
 	}
 
-	public Weibo(String baseURL) {
+	public Weibo(String baseURL,String consumerKey, String consumserSecret) {
 		this();
 		this.baseURL = baseURL;
 	}

@@ -271,9 +271,6 @@ public class User extends WeiboResponse implements java.io.Serializable {
 		try {
 			//			int next_cursor = json.getInt("next_cursor");
 			//			int previous_cursor = json.getInt("previous_cursor");
-
-
-
 			JSONArray list = json.getJSONArray("users");
 			int size=list.length();
 			List<User> users=new ArrayList<User>(size);
@@ -281,8 +278,25 @@ public class User extends WeiboResponse implements java.io.Serializable {
 				users.add(new User(list.getJSONObject(i)));
 			}
 			return users;
+		}
+		catch (JSONException je) {
+			throw new WeiboException(je);
+		}
 
-
+	}
+	
+	
+	/**
+	 * 王恒写的用来 得到TMD next_cursor的东东!!!草泥马
+	 * @author swarm
+	 */
+	public static int getNextCursor(Response res)throws WeiboException
+	{
+		JSONObject json=res.asJSONObject();
+		try 
+		{ 
+			int next_cursor = json.getInt("next_cursor");  
+			return next_cursor; 
 		}
 		catch (JSONException je) {
 			throw new WeiboException(je);
